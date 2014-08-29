@@ -1,0 +1,4 @@
+# my ignore
+*.zip
+.gitattributes
+.htaccess
