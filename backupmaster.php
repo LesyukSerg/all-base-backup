@@ -2,7 +2,9 @@
     set_time_limit(0); // Убираем ограничение на максимальное время работы скрипта
     date_default_timezone_set('Europe/Kiev');
     
-    $dump_dir = getcwd(); // Директория, куда будут помещаться архивы
+    //$dump_dir = getcwd(); // Директория, куда будут помещаться архивы
+    $dump_dir = dirname(__FILE__); // Директория, куда будут помещаться архивы
+    
     $delay_delete = 90 * 24 * 3600; // Время в секундах, через которое архивы будут удаляться
     $filezip = 'backup_'.date("Y-m-d_His").'.zip'; // Имя архива
     $timestart = microtime(1);
@@ -80,7 +82,7 @@
     
     function db_dump($cnct, $dump_dir, $db_name)
     {
-        passthru('mysqldump --host='.$cnct['host'].' --user='.$cnct['user'].' --password='.$cnct['pass'].' '.$db_name.' > '.$db_name.'.sql');
+        passthru('mysqldump --host='.$cnct['host'].' --user='.$cnct['user'].' --password='.$cnct['pass'].' '.$db_name.' > '.$dump_dir.'/'.$db_name.'.sql');
         echo '<b><font color="green">СОЗДАН</font></b> дамп базы <b>'.$db_name.'</b><br />';
         
         flush();
