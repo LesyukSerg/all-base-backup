@@ -1,7 +1,6 @@
 <?php
     set_time_limit(0); // Убираем ограничение на максимальное время работы скрипта
     date_default_timezone_set('Europe/Kiev');
-    ini_set('memory_limit', '64M');
     
     $dump_dir = getcwd(); // Директория, куда будут помещаться архивы
     $delay_delete = 90 * 24 * 3600; // Время в секундах, через которое архивы будут удаляться
@@ -19,7 +18,6 @@
     deleteOldArchive($dump_dir, $delay_delete); // Удаляем все старые архивы
     
     $db_names = get_databases($connect); // Получаем все базы данных
-    //$db_names[] = 'sgifts_base';
     
     start($dump_dir, $filezip, $connect, $db_names);
     
@@ -53,6 +51,7 @@
         $files = glob($dump_dir."/*.zip");
         foreach ($files as $file) {
             if ($ts - filemtime($file) > $delay_delete) {
+                echo 'Удален старый дамп: '.$file.'<br />';
                 unlink($file);
             }
         }
@@ -66,7 +65,7 @@
         
         $db_files = array(); // Массив, куда будут помещаться файлы с дампом баз данных
         foreach ($db_names as $name) {
-            $db_files[] = $dump_dir.'/'.$name.'.gz'; // Помещаем файл в массив
+            $db_files[] = $dump_dir.'/'.$name.'.sql'; // Помещаем файл в массив
             db_dump($connect, $dump_dir, $name);
         }
         
@@ -81,7 +80,7 @@
     
     function db_dump($cnct, $dump_dir, $db_name)
     {
-        passthru('mysqldump --host='.$cnct['host'].' --user='.$cnct['user'].' --password='.$cnct['pass'].' '.$db_name.' > '.$db_name.'.gz');
+        passthru('mysqldump --host='.$cnct['host'].' --user='.$cnct['user'].' --password='.$cnct['pass'].' '.$db_name.' > '.$db_name.'.sql');
         echo '<b><font color="green">СОЗДАН</font></b> дамп базы <b>'.$db_name.'</b><br />';
         
         flush();
