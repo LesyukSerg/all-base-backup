@@ -14,7 +14,7 @@
     $folder = 'backup_' . date("Y-m-d_His"); # Ім'я теки з архівами
 
     # Параметри підключення до бази данних
-    $connect = array('host' => 'localhost', 'user' => 'root', 'pass' => '');
+    $connect = ['host' => 'localhost', 'user' => 'root', 'pass' => ''];
 
     deleteOldArchive($dump_dir, $delay_delete); # Видаляєм всі старі архіви
 
@@ -37,7 +37,8 @@
 
                 if (is_dir($file)) {
                     rmdir($file);
-                } else {
+                }
+                else {
                     unlink($file);
                 }
             }
@@ -46,7 +47,7 @@
 
     function get_databases($connect) # Отримаємо сптсок всіх баз данних
     {
-        $db_names = array();
+        $db_names = [];
 
         $db = new mysqli($connect['host'], $connect['user'], $connect['pass']); # З'єднуємося з базою даних
         $db->query("SET NAMES 'utf-8'"); # Встановлюємо кодування
@@ -71,8 +72,8 @@
 
         mkdir($dump_dir . "/" . $folder);
 
-        $db_files = array(); # Масив імен баз данных
-        $not = array();
+        $db_files = []; # Масив імен баз данных
+        $not = [];
 
         foreach ($db_names as $name) {
             if (!in_array($name, $not)) {
